@@ -8,7 +8,7 @@
 <details>
 <summary>Защита от сканеров портов</summary>
     
-💤 Без защиты:
+#### 💤 Без защиты:
 
 ![💤 Без защиты](withoutAntiPortScanners.jpg)
 
