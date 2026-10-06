@@ -32,14 +32,14 @@
 2. Защита от простых TCP SYN flood и UDP flood атак с временными автобанами.
 3. Защита от сканирования TCP/UDP портов.
 4. Раздельная работа с IPv4 и IPv6.
-5. Белый список IP-адресов (whitelist4 и whitelist6) с полным обходом правил.
+5. Список доверенных IP-адресов (bypass4 и bypass6) с полным обходом правил.
 6. ACL для отдельных портов (port_acl4 и port_acl6) - возможность разрешить определённый порт только конкретному IP.
-7. Поддержка Docker и WireGuard. Интерфейсы docker0 и wg0 учтены в правилах (можете заменить на свои).
+7. Поддержка Docker и WireGuard. Интерфейсы docker0, br-* и wg0 учтены в правилах (можете заменить на свои).
 8. Фильтрация некорректных TCP пакетов и части подозрительного сетевого мусора.
 9. Ограничение количества новых TCP сессий с одного адреса (по умолчанию 64).
 10. Поддержка ICMP/ICMPv6.
 
-Конфиг тестировался на Ubuntu 24.04.4 с nftables v1.0.9, но должен работать на системах с современным nftables.
+Конфиг тестировался на Ubuntu 26.04.1 с nftables v1.1.6, но должен работать на системах с современным nftables.
 
 
 ## 🗃️ Установка:
@@ -103,10 +103,10 @@ set allowed_udp4 {
 > [!WARNING]
 > Обязательно добавьте ваш SSH порт, иначе после применения правил можно потерять доступ к серверу.
 
-Для добавления своего IP в белый список:
+Для добавления IP с обходом проверок:
 
 ```
-set whitelist4 {
+set bypass4 {
     type ipv4_addr
     flags interval
     elements = { ВАШ.IP }
@@ -125,7 +125,7 @@ set whitelist4 {
 
 Посмотреть IPv4, заблокированные за вредоносный трафик:
 ```
-sudo nft list set inet filter ddos4
+sudo nft list set inet filter blacklist4
 ```
 Посмотреть IPv4, заблокированные за сканирование портов:
 ```
@@ -133,7 +133,7 @@ sudo nft list set inet filter portscanners4
 ```
 Сбросить все IPv4 автобаны:
 ```
-sudo nft flush set inet filter ddos4 && sudo nft flush set inet filter portscanners4
+sudo nft flush set inet filter blacklist4 && sudo nft flush set inet filter portscanners4
 ```
 
 ### > IPv6:
@@ -141,7 +141,7 @@ sudo nft flush set inet filter ddos4 && sudo nft flush set inet filter portscann
 
 Посмотреть IPv6, заблокированные за вредоносный трафик:
 ```
-sudo nft list set inet filter ddos6
+sudo nft list set inet filter blacklist6
 ```
 Посмотреть IPv6, заблокированные за сканирование портов:
 ```
@@ -149,7 +149,7 @@ sudo nft list set inet filter portscanners6
 ```
 Сбросить все IPv6 автобаны:
 ```
-sudo nft flush set inet filter ddos6 && sudo nft flush set inet filter portscanners6
+sudo nft flush set inet filter blacklist6 && sudo nft flush set inet filter portscanners6
 ```
 
 
