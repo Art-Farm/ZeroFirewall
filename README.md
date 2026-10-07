@@ -140,9 +140,7 @@ set allowed_udp6 {
 ```nft
 set port_acl4 {
     type inet_service . ipv4_addr
-    elements = {
-        3306 . ВАШ.IP
-    }
+    elements = { 3306 . ВАШ.IP }
 }
 ```
 
